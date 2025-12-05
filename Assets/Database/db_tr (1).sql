@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 03 Des 2025 pada 11.48
+-- Waktu pembuatan: 05 Des 2025 pada 13.02
 -- Versi server: 10.4.32-MariaDB
 -- Versi PHP: 8.2.12
 
@@ -46,7 +46,6 @@ INSERT INTO `favorites` (`id`, `title`, `poster_url`, `rating`, `imdbID`, `creat
 (5, 'Almost Human', 'https://m.media-amazon.com/images/M/MV5BMzQ1NDQ3MjUxOF5BMl5BanBnXkFtZTgwMTY2MDczMDE@._V1_SX300.jpg', '8.0', 'tt2654580', '2025-11-24 06:01:17'),
 (6, 'The Human Centipede 2 (Full Sequence)', 'https://m.media-amazon.com/images/M/MV5BMjkwMDI0NjA5OV5BMl5BanBnXkFtZTcwODAxODI4Ng@@._V1_SX300.jpg', '8.0', 'tt1530509', '2025-11-24 06:01:21'),
 (7, 'The Human Stain', 'https://m.media-amazon.com/images/M/MV5BMTk5MjQyNTcxNV5BMl5BanBnXkFtZTcwMjcwNDAwMQ@@._V1_SX300.jpg', '8.0', 'tt0308383', '2025-11-24 06:01:23'),
-(8, 'Human Planet', 'https://m.media-amazon.com/images/M/MV5BMDYxN2U4YjEtZmZjYS00NmJkLTg3Y2EtZjFmNmFiNmExMDMwXkEyXkFqcGc@._V1_SX300.jpg', '9.9', 'tt1806234', '2025-11-24 06:01:25'),
 (10, 'Bila Esok Ibu Tiada', 'https://m.media-amazon.com/images/M/MV5BNGNjNDUwZjMtODI0Ny00ODY3LTkyODEtZDY0YTZjNjVjMmE3XkEyXkFqcGc@._V1_SX300.jpg', '8.0', 'tt31079741', '2025-11-24 06:07:49'),
 (13, '1 Kakak 7 Ponakan', 'https://m.media-amazon.com/images/M/MV5BYWI0ZmNiZmEtYjdhZC00YjA0LWFjNDktZDQwMDczYjk2YTVlXkEyXkFqcGc@._V1_SX300.jpg', '8.0', 'tt32881480', '2025-11-24 06:11:11'),
 (14, 'Sore: Wife from the Future', 'https://m.media-amazon.com/images/M/MV5BMmExZTcyZGUtN2Q4NC00NmFiLWI1NmQtOTg3OWRlMmE3OGVjXkEyXkFqcGc@._V1_SX300.jpg', '9.0', 'tt34548722', '2025-11-24 08:51:19'),
@@ -67,9 +66,71 @@ CREATE TABLE `film` (
   `saran_umur` varchar(255) NOT NULL,
   `tanggal_rilis` date NOT NULL,
   `harga` decimal(10,2) NOT NULL,
-  `deskripsi` text NOT NULL,
-  `id_film` int(11) NOT NULL
+  `sinopsis` text NOT NULL,
+  `id_film` int(11) NOT NULL,
+  `stok` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data untuk tabel `film`
+--
+
+INSERT INTO `film` (`judul_film`, `genre`, `durasi`, `rating`, `gambar`, `saran_umur`, `tanggal_rilis`, `harga`, `sinopsis`, `id_film`, `stok`) VALUES
+('Ngeri-Ngeri Sedap', 'Komedi', '1h20m', '9.5/10', 'img/NgeriSedap.jpeg', '18+', '2025-12-01', 30.00, 'Seru', 1, 0),
+('Agak Laen', 'Komedi Horor', '119 menit', '9.8/10', 'img\\Agak_Laen.jpg', '16+', '2025-11-04', 35.00, 'Lucu', 2, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `jadwal`
+--
+
+CREATE TABLE `jadwal` (
+  `id_jadwal` int(11) NOT NULL,
+  `id_film` int(11) NOT NULL,
+  `tanggal` date NOT NULL,
+  `jam_mulai` time NOT NULL,
+  `studio` varchar(50) DEFAULT 'Studio 1'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data untuk tabel `jadwal`
+--
+
+INSERT INTO `jadwal` (`id_jadwal`, `id_film`, `tanggal`, `jam_mulai`, `studio`) VALUES
+(1, 1, '2025-12-05', '12:30:00', 'Studio 1'),
+(2, 1, '2025-12-05', '15:00:00', 'Studio 1'),
+(3, 1, '2025-12-06', '13:00:00', 'Studio 2'),
+(4, 2, '2025-12-05', '14:00:00', 'Studio 3'),
+(5, 2, '2025-12-05', '19:00:00', 'Studio 3'),
+(6, 2, '2025-12-06', '16:00:00', 'Studio 1');
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `transaksi`
+--
+
+CREATE TABLE `transaksi` (
+  `id_transaksi` int(11) NOT NULL,
+  `id_user` int(11) NOT NULL,
+  `id_film` int(11) NOT NULL,
+  `tanggal_pesan` datetime NOT NULL DEFAULT current_timestamp(),
+  `tanggal_tayang` date NOT NULL,
+  `jam_tayang` varchar(10) NOT NULL,
+  `jumlah_tiket` int(11) NOT NULL,
+  `kursi` varchar(255) NOT NULL,
+  `total_harga` decimal(10,2) NOT NULL,
+  `status` enum('pending','terverifikasi','batal') NOT NULL DEFAULT 'pending',
+  `id_kasir` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data untuk tabel `transaksi`
+--
+
+INSERT INTO `transaksi` (`id_transaksi`, `id_user`, `id_film`, `tanggal_pesan`, `tanggal_tayang`, `jam_tayang`, `jumlah_tiket`, `kursi`, `total_harga`, `status`, `id_kasir`) VALUES
+(1, 8, 1, '2025-12-05 18:55:32', '2025-12-06', '13:00', 1, 'B1', 30.00, 'pending', NULL);
 
 -- --------------------------------------------------------
 
@@ -92,8 +153,11 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`id_user`, `username`, `password`, `role`, `created_at`) VALUES
 (1, 'admin', '', 'admin', '2025-12-02 03:13:22'),
 (2, 'kasir', '', 'kasir', '2025-12-02 03:13:22'),
-(3, 'user', '', 'user', '2025-12-02 03:13:22'),
-(4, 'talita', '$2y$10$ErrR06l9bkgTQ.lN0cwGuOZ2/cYs6B0MVBpgqW.uxReetaqz4IRYm', 'user', '2025-12-02 03:13:52');
+(4, 'talita', '$2y$10$ErrR06l9bkgTQ.lN0cwGuOZ2/cYs6B0MVBpgqW.uxReetaqz4IRYm', 'user', '2025-12-02 03:13:52'),
+(5, 'user123', '$2y$10$ef4byQTMyByIs6luCFex..fMFrBVds2xQ3ySbTmqyaKmNxmcr/15S', 'user', '2025-12-05 08:53:32'),
+(6, 'briangoo', '$2y$10$g4qF6cWbOzQvK9kOkWJYLe9HGfWq7oDYsB838dZ/nZG0pwRC7jfv.', 'user', '2025-12-05 09:39:18'),
+(7, 'ww', '$2y$10$UebwT1zofblNqypiCnj1cuNyxZiLIRLu4WW5mhxXUgv9scQKGDCzS', 'user', '2025-12-05 09:40:30'),
+(8, 'talitaq', 'qq', 'user', '2025-12-05 09:47:45');
 
 --
 -- Indexes for dumped tables
@@ -111,6 +175,21 @@ ALTER TABLE `favorites`
 --
 ALTER TABLE `film`
   ADD PRIMARY KEY (`id_film`);
+
+--
+-- Indeks untuk tabel `jadwal`
+--
+ALTER TABLE `jadwal`
+  ADD PRIMARY KEY (`id_jadwal`),
+  ADD KEY `id_film` (`id_film`);
+
+--
+-- Indeks untuk tabel `transaksi`
+--
+ALTER TABLE `transaksi`
+  ADD PRIMARY KEY (`id_transaksi`),
+  ADD KEY `fk_user_transaksi` (`id_user`),
+  ADD KEY `fk_film_transaksi` (`id_film`);
 
 --
 -- Indeks untuk tabel `users`
@@ -133,13 +212,42 @@ ALTER TABLE `favorites`
 -- AUTO_INCREMENT untuk tabel `film`
 --
 ALTER TABLE `film`
-  MODIFY `id_film` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_film` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT untuk tabel `jadwal`
+--
+ALTER TABLE `jadwal`
+  MODIFY `id_jadwal` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT untuk tabel `transaksi`
+--
+ALTER TABLE `transaksi`
+  MODIFY `id_transaksi` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT untuk tabel `users`
 --
 ALTER TABLE `users`
-  MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
+--
+
+--
+-- Ketidakleluasaan untuk tabel `jadwal`
+--
+ALTER TABLE `jadwal`
+  ADD CONSTRAINT `jadwal_ibfk_1` FOREIGN KEY (`id_film`) REFERENCES `film` (`id_film`) ON DELETE CASCADE;
+
+--
+-- Ketidakleluasaan untuk tabel `transaksi`
+--
+ALTER TABLE `transaksi`
+  ADD CONSTRAINT `fk_film_transaksi` FOREIGN KEY (`id_film`) REFERENCES `film` (`id_film`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_user_transaksi` FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

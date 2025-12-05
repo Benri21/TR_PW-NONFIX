@@ -1,5 +1,7 @@
 <?php
 session_start();
+// Pastikan path koneksi ini benar sesuai struktur folder Anda
+// Asumsi favorit.php ada di folder Frontend/user/ atau sejenisnya
 require_once __DIR__ . "/../../Backend/koneksi.php"; 
 
 // --- BAGIAN API (BACKEND) ---
@@ -58,21 +60,25 @@ $username = isset($_SESSION['username']) ? $_SESSION['username'] : 'User';
     <title>TeknikTix - Favorite Collection</title>
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
-    <link rel="stylesheet" href="../Style/style.css"> 
+    <link rel="stylesheet" href="../Style/style.css?v=<?= time(); ?>"> 
 
     <style>
-        /* CSS Tambahan khusus halaman ini untuk merapikan layout */
+        /* CSS KHUSUS HALAMAN INI */
         body {
-            background-color: #0f4c9c; /* Warna background gelap */
-            color: white;
-            font-family: 'Poppins', sans-serif;
-            margin-top: 100px; /* Memberi jarak agar tidak tertutup Navbar Fixed */
+            padding-top: 80px; 
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-color: #0f4c9c;
         }
 
-        /* Styling Kartu Film */
+        .container {
+            flex: 1; 
+        }
+
+        /* Styling Kartu Film Favorit */
         .movie-card-fav {
             position: relative;
             border-radius: 10px;
@@ -80,75 +86,48 @@ $username = isset($_SESSION['username']) ? $_SESSION['username'] : 'User';
             transition: transform 0.3s ease;
             cursor: pointer;
             background: #16213e;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            height: 100%;
         }
         .movie-card-fav:hover {
             transform: scale(1.03);
-            box-shadow: 0 0 15px rgba(229, 9, 20, 0.5);
+            box-shadow: 0 0 15px rgba(255, 193, 7, 0.5);
         }
         .movie-poster-fav {
             width: 100%;
             height: 320px;
             object-fit: cover;
         }
-
-        /* Overlay Tombol (Edit/Hapus) */
         .action-overlay {
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
             background: rgba(0,0,0,0.8);
-            display: none; /* Sembunyi default */
+            display: none;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             gap: 10px;
         }
         .movie-card-fav:hover .action-overlay {
-            display: flex; /* Muncul saat hover */
-        }
-
-        /* Navbar Override (Agar sesuai tema TekCinema) */
-        header {
-            position: fixed;
-            top: 0; left: 0; width: 100%;
-            background-color: #0f4c9c;
-            z-index: 1000;
-            padding: 15px 40px;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-        }
-        
-        .header-left h2 { 
-            font-size: 24px;
-            font-weight: 800;; }
-        
-        .nav-links { display: flex; gap: 20px; list-style: none; margin: 0; padding: 0; }
-        .nav-links a { color: white; text-decoration: none; font-weight: 500; transition: 0.3s; }
-        .nav-links a:hover, .nav-links a.active { color: #e50914; }
-
-        .header-right { display: flex; align-items: center; gap: 20px; }
-        .btn-logout { 
-            background: #e50914; color: white; padding: 8px 20px; 
-            border-radius: 5px; text-decoration: none; font-size: 14px; 
         }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="header-left">
-            <h2>TekCinema</h2>
+        <h2>TekCinema</h2>
+        <div class="nav-container">
+            <ul class="nav-links">
+                <div class="Menu">
+                    <li><a href="../landingpage.php">Home</a></li>
+                    <li><a href="../Jadwal_film.php">Jadwal Film</a></li>
+                    <li><a href="favorit.php"class="active">Rating Film</a></li>
+                    <li><a href="pesanan.php">Pesanan Saya</a></li>
+                </div>
+            </ul>
         </div>
         
-        <ul class="nav-links">
-            <li><a href="../landingpage.php">Home</a></li>
-            <li><a href="../Jadwal_film.php">Jadwal Film</a></li>
-            <li><a href="favorit.php" class="active">Favorite</a></li>
-            <li><a href="rating.php">Rating Film</a></li>
-            <li><a href="pesanan.php">Pesanan Saya</a></li>
-        </ul>
-
         <div class="header-right">
             <div class="user-info">
                 <i class="fa-solid fa-user"></i> <span><?= htmlspecialchars($username) ?></span>
@@ -158,25 +137,61 @@ $username = isset($_SESSION['username']) ? $_SESSION['username'] : 'User';
     </header>
 
     <div class="container pb-5">
-        <div class="row align-items-center mb-5 p-4 rounded" style="background: rgba(255,255,255,0.05);">
+        <div class="row align-items-center mb-5 p-4 rounded mt-4" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">
             <div class="col-md-6">
-                <h2 class="fw-bold mb-1">Koleksi Favorit Saya</h2>
+                <h2 class="fw-bold mb-1 text-warning">Koleksi Favorit Saya</h2>
                 <p class="text-white-50 m-0">Simpan film favoritmu dari OMDb Database disini.</p>
             </div>
             <div class="col-md-6 d-flex gap-2">
                 <input type="text" id="searchInput" class="form-control bg-dark text-white border-secondary" placeholder="Cari judul film (Contoh: Avengers)...">
-                <button class="btn btn-primary" onclick="searchOMDb()">Cari</button>
+                <button class="btn btn-warning fw-bold" onclick="searchOMDb()">Cari</button>
                 <button class="btn btn-outline-light" onclick="loadFavorites()">Koleksiku</button>
             </div>
         </div>
 
         <div class="row row-cols-2 row-cols-md-4 row-cols-lg-5 g-4" id="movieContainer">
             <div class="text-center w-100 mt-5">
-                <div class="spinner-border text-danger" role="status"></div>
-                <p>Memuat data...</p>
+                <div class="spinner-border text-warning" role="status"></div>
+                <p class="text-white mt-2">Memuat data...</p>
             </div>
         </div>
     </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section about">
+                <h3>TeknikTix</h3>
+                <p>Platform pemesanan tiket bioskop terpercaya dengan layanan terbaik untuk pengalaman menonton yang tak terlupakan.</p>
+            </div>
+            <div class="footer-section links">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="../landingpage.php">Home</a></li>
+                    <li><a href="#">Now Showing</a></li>
+                    <li><a href="#">Upcoming Movies</a></li>
+                    <li><a href="#">Promo</a></li>
+                </ul>
+            </div>
+            <div class="footer-section contact">
+                <h3>Kontak Kami</h3>
+                <p><i class="fas fa-map-marker-alt"></i> Jl. Kemiri Barat No.47, Salatiga</p>
+                <p><i class="fas fa-phone"></i> +62 812-1234-4321</p>
+                <p><i class="fas fa-envelope"></i> info@tekniktix.com</p>
+            </div>
+            <div class="footer-section social">
+                <h3>Ikuti Kami</h3>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                </div>
+                <a href="#" class="btn-tentang-footer">Tentang Kami</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2025 TeknikTix. All Rights Reserved.
+        </div>
+    </footer>
 
     <div class="modal fade" id="movieDetailModal" tabindex="-1" style="color: black;">
         <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -235,46 +250,35 @@ $username = isset($_SESSION['username']) ? $_SESSION['username'] : 'User';
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        const API_KEY = 'd9ec1408'; // API KEY OMDb
+        const API_KEY = 'd9ec1408'; 
         const CURRENT_FILE = 'favorit.php'; 
 
         const movieContainer = document.getElementById('movieContainer');
         const detailModal = new bootstrap.Modal(document.getElementById('movieDetailModal'));
         const editModal = new bootstrap.Modal(document.getElementById('editModal'));
 
-        // 1. LOAD FAVORITE (Dari Database Lokal)
         async function loadFavorites() {
             document.getElementById('searchInput').value = ""; 
             movieContainer.innerHTML = '<div class="text-center w-100 mt-5"><div class="spinner-border text-light"></div></div>';
-            
             try {
                 const res = await fetch(`${CURRENT_FILE}?action=read`);
                 const movies = await res.json();
-                
                 movieContainer.innerHTML = '';
                 if(movies.length === 0) {
-                    movieContainer.innerHTML = '<div class="text-center w-100 mt-5"><i class="fa-solid fa-film fa-3x mb-3 text-secondary"></i><p>Belum ada koleksi film.</p></div>';
+                    movieContainer.innerHTML = '<div class="text-center w-100 mt-5"><i class="fa-solid fa-film fa-3x mb-3 text-secondary"></i><p class="text-white-50">Belum ada koleksi film.</p></div>';
                     return;
                 }
-
                 movies.forEach(m => renderCard(m, true));
-            } catch (error) {
-                console.error(error);
-                movieContainer.innerHTML = '<p class="text-center text-danger w-100">Gagal memuat data.</p>';
-            }
+            } catch (error) { movieContainer.innerHTML = '<p class="text-center text-danger w-100">Gagal memuat data.</p>'; }
         }
 
-        // 2. SEARCH OMDb
         async function searchOMDb() {
             const query = document.getElementById('searchInput').value;
             if(!query) return alert("Ketik judul film!");
-            
             movieContainer.innerHTML = '<div class="text-center w-100 mt-5"><div class="spinner-border text-light"></div></div>';
-
             try {
                 const res = await fetch(`https://www.omdbapi.com/?s=${query}&apikey=${API_KEY}`);
                 const data = await res.json();
-
                 movieContainer.innerHTML = '';
                 if(data.Response === "True") {
                     data.Search.forEach(m => {
@@ -287,32 +291,19 @@ $username = isset($_SESSION['username']) ? $_SESSION['username'] : 'User';
                         };
                         renderCard(movieObj, false);
                     });
-                } else {
-                    movieContainer.innerHTML = '<p class="text-center w-100 mt-5">Film tidak ditemukan.</p>';
-                }
+                } else { movieContainer.innerHTML = '<p class="text-center w-100 mt-5 text-white">Film tidak ditemukan.</p>'; }
             } catch (err) { alert("Gagal koneksi internet."); }
         }
 
-        // RENDER KARTU FILM
         function renderCard(m, isFavorite) {
             const safeTitle = m.title.replace(/'/g, "");
             let buttons = '';
-
             if (isFavorite) {
                 buttons = `
-                    <button class="btn btn-warning btn-sm w-75 mb-2" onclick="openEdit(${m.id}, '${safeTitle}', '${m.rating}')">
-                        <i class="fa-solid fa-pen"></i> Edit Rating
-                    </button>
-                    <button class="btn btn-danger btn-sm w-75" onclick="deleteFav(${m.id})">
-                        <i class="fa-solid fa-trash"></i> Hapus
-                    </button>
-                `;
+                    <button class="btn btn-warning btn-sm w-75 mb-2 fw-bold" onclick="openEdit(${m.id}, '${safeTitle}', '${m.rating}')"><i class="fa-solid fa-pen"></i> Edit</button>
+                    <button class="btn btn-danger btn-sm w-75 fw-bold" onclick="deleteFav(${m.id})"><i class="fa-solid fa-trash"></i> Hapus</button>`;
             } else {
-                buttons = `
-                    <button class="btn btn-success btn-sm w-75" onclick="addFav('${safeTitle}', '${m.poster_url}', '${m.imdbID}')">
-                        <i class="fa-solid fa-heart"></i> Simpan
-                    </button>
-                `;
+                buttons = `<button class="btn btn-success btn-sm w-75 fw-bold" onclick="addFav('${safeTitle}', '${m.poster_url}', '${m.imdbID}')"><i class="fa-solid fa-heart"></i> Simpan</button>`;
             }
 
             const html = `
@@ -329,14 +320,9 @@ $username = isset($_SESSION['username']) ? $_SESSION['username'] : 'User';
             movieContainer.innerHTML += html;
         }
 
-        // FUNGSI CRUD (Create, Update, Delete)
         async function addFav(title, poster, imdbID) {
-            const res = await fetch(`${CURRENT_FILE}?action=create`, {
-                method: 'POST',
-                body: JSON.stringify({ title, poster, rating: "8.0", imdbID })
-            });
-            const result = await res.json();
-            alert(result.message);
+            const res = await fetch(`${CURRENT_FILE}?action=create`, { method: 'POST', body: JSON.stringify({ title, poster, rating: "8.0", imdbID }) });
+            alert((await res.json()).message);
         }
 
         function openEdit(id, title, rating) {
@@ -349,31 +335,21 @@ $username = isset($_SESSION['username']) ? $_SESSION['username'] : 'User';
         async function saveEdit() {
             const id = document.getElementById('editId').value;
             const rating = document.getElementById('editRating').value;
-            const res = await fetch(`${CURRENT_FILE}?action=update`, {
-                method: 'POST',
-                body: JSON.stringify({ id, rating })
-            });
+            const res = await fetch(`${CURRENT_FILE}?action=update`, { method: 'POST', body: JSON.stringify({ id, rating }) });
             alert((await res.json()).message);
             editModal.hide();
             loadFavorites();
         }
 
         async function deleteFav(id) {
-            if(confirm("Hapus dari favorit?")) {
-                await fetch(`${CURRENT_FILE}?action=delete&id=${id}`);
-                loadFavorites();
-            }
+            if(confirm("Hapus dari favorit?")) { await fetch(`${CURRENT_FILE}?action=delete&id=${id}`); loadFavorites(); }
         }
 
-        // SHOW DETAIL
         async function showDetail(title) {
             detailModal.show();
-            // Reset konten lama
             document.getElementById('modalDetailPoster').src = "https://via.placeholder.com/300x450?text=Loading...";
-            
             const res = await fetch(`https://www.omdbapi.com/?t=${encodeURIComponent(title)}&apikey=${API_KEY}`);
             const data = await res.json();
-            
             if(data.Response === "True") {
                 document.getElementById('modalDetailTitle').innerText = data.Title;
                 document.getElementById('modalDetailPoster').src = data.Poster !== "N/A" ? data.Poster : "https://via.placeholder.com/300x450";
@@ -384,8 +360,6 @@ $username = isset($_SESSION['username']) ? $_SESSION['username'] : 'User';
                 document.getElementById('modalPlot').innerText = data.Plot;
             }
         }
-
-        // Jalankan saat pertama load
         loadFavorites();
     </script>
 </body>

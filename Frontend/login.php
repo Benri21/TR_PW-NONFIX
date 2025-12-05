@@ -15,14 +15,13 @@ if (isset($_POST['login'])) {
     if (mysqli_num_rows($result) === 1) {
         $row = mysqli_fetch_assoc($result);
         
-        // Verifikasi Password (Hash)
-        if (password_verify($password, $row['password'])) {
+        
+        if ($password == $row['password']) {
             // Set Session
             $_SESSION['username'] = $row['username'];
             $_SESSION['role'] = $row['role'];
             $_SESSION['id_user'] = $row['id_user'];
 
-            // Redirect berdasarkan Role
             if ($row['role'] == 'admin') {
                 header("Location: ../Backend/admin/dashboard.php"); // Arahkan ke folder admin
             } else if ($row['role'] == 'kasir') {

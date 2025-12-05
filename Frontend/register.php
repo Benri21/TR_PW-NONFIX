@@ -1,5 +1,6 @@
 <?php
 session_start();
+// Pastikan path ke koneksi.php benar
 require_once __DIR__ . "/../Backend/koneksi.php";
 
 $message = "";
@@ -18,11 +19,12 @@ if (isset($_POST['register'])) {
         if (mysqli_num_rows($cek_user) > 0) {
             $message = "Username sudah digunakan!";
         } else {
-            // Enkripsi Password (Hashing)
-            $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+            // --- BAGIAN YANG DIUBAH ---
+            // Kita TIDAK LAGI menggunakan password_hash.
+            // Password langsung disimpan apa adanya.
             
             // Default role adalah 'user'
-            $query = "INSERT INTO users (username, password, role) VALUES ('$username', '$hashed_password', 'user')";
+            $query = "INSERT INTO users (username, password, role) VALUES ('$username', '$password', 'user')";
             
             if (mysqli_query($conn, $query)) {
                 echo "<script>alert('Registrasi Berhasil! Silakan Login.'); window.location.href='login.php';</script>";
