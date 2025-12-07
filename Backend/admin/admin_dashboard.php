@@ -66,7 +66,7 @@ if ($data_detail === false) {
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Admin Dashboard - TeknikTix</title>
+    <title>Admin Dashboard - Teknik-Cinema</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -134,13 +134,14 @@ if ($data_detail === false) {
 <!-- ============================== -->
 <nav class="navbar-custom d-flex justify-content-between">
     <div style="color:#ffcc00; font-size:22px; font-weight:bold;">
-        TEKNIKTIX ADMIN PANEL
+        TEKNIK-CINEMA ADMIN PANEL
     </div>
 
     <div>
         <a href="admin_dashboard.php">Dashboard</a>
         <a href="admin_film.php">Kelola Film</a>
         <a href="admin_jadwal.php">Kelola Jadwal</a>
+        <a href="admin_users.php"><i class="fa-solid fa-users-gear"></i> Kelola User</a>
         <a href="../../Frontend/logout.php" class="menu-item logout">Logout</a>
 
     </div>

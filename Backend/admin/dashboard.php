@@ -45,7 +45,7 @@ $data_detail = mysqli_query($conn, $query_detail);
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <title>Admin Dashboard - TeknikTix</title>
+    <title>Admin Dashboard - TEKNIK-CINEMA</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -114,7 +114,7 @@ $data_detail = mysqli_query($conn, $query_detail);
 
 <nav class="navbar-custom d-flex justify-content-between align-items-center">
     <div style="color:#ffcc00; font-size:22px; font-weight:bold;">
-        <i class="fa-solid fa-film"></i> TEKNIKTIX ADMIN
+        <i class="fa-solid fa-film"></i> TEKNIK-CINEMA ADMIN
     </div>
 
     <div>

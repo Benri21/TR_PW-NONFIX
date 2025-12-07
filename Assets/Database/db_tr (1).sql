@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 05 Des 2025 pada 13.02
+-- Waktu pembuatan: 07 Des 2025 pada 19.14
 -- Versi server: 10.4.32-MariaDB
 -- Versi PHP: 8.2.12
 
@@ -77,7 +77,8 @@ CREATE TABLE `film` (
 
 INSERT INTO `film` (`judul_film`, `genre`, `durasi`, `rating`, `gambar`, `saran_umur`, `tanggal_rilis`, `harga`, `sinopsis`, `id_film`, `stok`) VALUES
 ('Ngeri-Ngeri Sedap', 'Komedi', '1h20m', '9.5/10', 'img/NgeriSedap.jpeg', '18+', '2025-12-01', 30.00, 'Seru', 1, 0),
-('Agak Laen', 'Komedi Horor', '119 menit', '9.8/10', 'img\\Agak_Laen.jpg', '16+', '2025-11-04', 35.00, 'Lucu', 2, 0);
+('Agak Laen', 'Komedi Horor', '119 menit', '9.8/10', 'img\\Agak_Laen.jpg', '16+', '2025-11-04', 35.00, 'Lucu', 2, 0),
+('Jumbo 2025', 'Animasi Anak', '139 menit', '9,0/10', '../../img/Jumbo.jpg', 'RBO', '2024-02-12', 35000.00, 'Asik', 3, 40);
 
 -- --------------------------------------------------------
 
@@ -98,12 +99,13 @@ CREATE TABLE `jadwal` (
 --
 
 INSERT INTO `jadwal` (`id_jadwal`, `id_film`, `tanggal`, `jam_mulai`, `studio`) VALUES
-(1, 1, '2025-12-05', '12:30:00', 'Studio 1'),
-(2, 1, '2025-12-05', '15:00:00', 'Studio 1'),
-(3, 1, '2025-12-06', '13:00:00', 'Studio 2'),
-(4, 2, '2025-12-05', '14:00:00', 'Studio 3'),
-(5, 2, '2025-12-05', '19:00:00', 'Studio 3'),
-(6, 2, '2025-12-06', '16:00:00', 'Studio 1');
+(1, 1, '2025-12-07', '12:30:00', 'Studio 1'),
+(2, 1, '2025-12-07', '15:00:00', 'Studio 1'),
+(3, 1, '2025-12-08', '13:00:00', 'Studio 2'),
+(4, 1, '2025-12-09', '14:00:00', 'Studio 1'),
+(5, 2, '2025-12-07', '16:00:00', 'Studio 3'),
+(6, 2, '2025-12-08', '19:00:00', 'Studio 2'),
+(7, 3, '2025-02-21', '02:11:00', 'Studio Luar');
 
 -- --------------------------------------------------------
 
@@ -130,7 +132,9 @@ CREATE TABLE `transaksi` (
 --
 
 INSERT INTO `transaksi` (`id_transaksi`, `id_user`, `id_film`, `tanggal_pesan`, `tanggal_tayang`, `jam_tayang`, `jumlah_tiket`, `kursi`, `total_harga`, `status`, `id_kasir`) VALUES
-(1, 8, 1, '2025-12-05 18:55:32', '2025-12-06', '13:00', 1, 'B1', 30.00, 'pending', NULL);
+(1, 8, 1, '2025-12-05 18:55:32', '2025-12-06', '13:00', 1, 'B1', 30.00, 'terverifikasi', 11),
+(2, 8, 2, '2025-12-07 15:29:48', '2025-12-07', '16:00', 1, 'A1', 35.00, 'terverifikasi', 11),
+(4, 14, 1, '2025-12-08 01:06:56', '2025-12-09', '14:00', 1, 'D2', 30.00, 'terverifikasi', 11);
 
 -- --------------------------------------------------------
 
@@ -151,13 +155,15 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id_user`, `username`, `password`, `role`, `created_at`) VALUES
-(1, 'admin', '', 'admin', '2025-12-02 03:13:22'),
-(2, 'kasir', '', 'kasir', '2025-12-02 03:13:22'),
 (4, 'talita', '$2y$10$ErrR06l9bkgTQ.lN0cwGuOZ2/cYs6B0MVBpgqW.uxReetaqz4IRYm', 'user', '2025-12-02 03:13:52'),
 (5, 'user123', '$2y$10$ef4byQTMyByIs6luCFex..fMFrBVds2xQ3ySbTmqyaKmNxmcr/15S', 'user', '2025-12-05 08:53:32'),
 (6, 'briangoo', '$2y$10$g4qF6cWbOzQvK9kOkWJYLe9HGfWq7oDYsB838dZ/nZG0pwRC7jfv.', 'user', '2025-12-05 09:39:18'),
 (7, 'ww', '$2y$10$UebwT1zofblNqypiCnj1cuNyxZiLIRLu4WW5mhxXUgv9scQKGDCzS', 'user', '2025-12-05 09:40:30'),
-(8, 'talitaq', 'qq', 'user', '2025-12-05 09:47:45');
+(8, 'talitaq', 'qq', 'user', '2025-12-05 09:47:45'),
+(10, 'admin12', 'admin123', 'admin', '2025-12-07 08:16:32'),
+(11, 'kasir12', '222', 'kasir', '2025-12-07 08:30:37'),
+(13, 'benri', '672024259', 'admin', '2025-12-07 18:04:09'),
+(14, 'BenriUser', '123', 'user', '2025-12-07 18:06:28');
 
 --
 -- Indexes for dumped tables
@@ -212,25 +218,25 @@ ALTER TABLE `favorites`
 -- AUTO_INCREMENT untuk tabel `film`
 --
 ALTER TABLE `film`
-  MODIFY `id_film` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_film` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT untuk tabel `jadwal`
 --
 ALTER TABLE `jadwal`
-  MODIFY `id_jadwal` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id_jadwal` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT untuk tabel `transaksi`
 --
 ALTER TABLE `transaksi`
-  MODIFY `id_transaksi` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_transaksi` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT untuk tabel `users`
 --
 ALTER TABLE `users`
-  MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
@@ -253,25 +259,3 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
--- --------------------------------------------------------
--- Update Password Kasir Otomatis
--- --------------------------------------------------------
-
--- Pastikan user kasir dibuat jika belum ada (opsional, jaga-jaga)
-INSERT INTO `users` (`username`, `password`, `role`) 
-SELECT 'kasir', 'kasir123', 'kasir'
-WHERE NOT EXISTS (SELECT username FROM users WHERE username = 'kasir');
-
--- Update passwordnya menjadi kasir123
-UPDATE `users` SET `password` = 'kasir123' WHERE `username` = 'kasir';
-
--- Pastikan user admin ada
-INSERT INTO `users` (`username`, `password`, `role`)
-SELECT 'admin', 'admin123', 'admin'
-WHERE NOT EXISTS (SELECT username FROM users WHERE username = 'admin');
-
--- Update password admin menjadi admin123
-UPDATE `users` SET `password` = 'admin123' WHERE `username` = 'admin';
-
-
-COMMIT;

@@ -192,7 +192,7 @@ header h2 {
 }
 
 .circle-logo h3 { margin: 0; font-size: 20px; font-weight: 800; }
-.circle-logo p { margin: 0; font-size: 9px; font-weight: bold; }
+.circle-logo p { margin: 0; font-size: 9px; font-weight: bold; color: #000; }
 
 /* =========================================
    4. RECOMMENDATION & JADWAL SECTION (GRID FILM)

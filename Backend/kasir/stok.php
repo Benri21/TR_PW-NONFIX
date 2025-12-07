@@ -25,7 +25,7 @@ $result = mysqli_query($conn, $query);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stok Tiket - TeknikTix</title>
+    <title>Stok Tiket - Teknik-Cinema</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
@@ -119,7 +119,7 @@ $result = mysqli_query($conn, $query);
     <div class="row">
         
         <div class="col-md-2 sidebar">
-            <h4><i class="fa-solid fa-film"></i> TEKNIKTIX</h4>
+            <h4><i class="fa-solid fa-film"></i> TEKNIK-CINEMA</h4>
             <p class="small text-white-50 px-3 mb-2">MENU UTAMA</p>
             <a href="transaksi.php"><i class="fa-solid fa-ticket me-2"></i> Verifikasi Tiket</a>
             <a href="stok.php" class="active"><i class="fa-solid fa-chair me-2"></i> Cek Stok Kursi</a>

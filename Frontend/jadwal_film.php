@@ -16,7 +16,7 @@ $result = mysqli_query($conn, $query);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jadwal Film - TeknikTix</title>
+    <title>Jadwal Film - Teknik Cineam</title>
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -208,7 +208,7 @@ $result = mysqli_query($conn, $query);
                 <h3>Kontak Kami</h3>
                 <p><i class="fas fa-map-marker-alt"></i> Jl. Kemiri Barat No.47, Salatiga</p>
                 <p><i class="fas fa-phone"></i> +62 812-1234-4321</p>
-                <p><i class="fas fa-envelope"></i> info@tekniktix.com</p>
+                <p><i class="fas fa-envelope"></i> info@teknikcineam.com</p>
             </div>
 
             <div class="footer-section social">
@@ -223,7 +223,7 @@ $result = mysqli_query($conn, $query);
         </div>
 
         <div class="footer-bottom">
-            &copy; 2025 TeknikTix. All Rights Reserved.
+            &copy; 2025 Teknik Cinema. All Rights Reserved.
         </div>
     </footer>
 

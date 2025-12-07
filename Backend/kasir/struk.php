@@ -34,7 +34,7 @@ if (!$data) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Struk #<?= $data['id_transaksi'] ?> - TeknikTix</title>
+    <title>Struk #<?= $data['id_transaksi'] ?> - TekCinema</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
@@ -171,8 +171,8 @@ if (!$data) {
     </div>
 
     <div class="header">
-        <h2>TEKNIKTIX</h2>
-        <p>Jl. Teknik Komputer No. 1, Salatiga</p>
+        <h2>TEKNIK-CINEMA</h2>
+        <p>Jl. Kemiri Barat No.47, Salatiga</p>
         <p>021-555-0199</p>
     </div>
 
@@ -233,7 +233,7 @@ if (!$data) {
         <p>-- TERIMA KASIH --</p>
         <p><i>Tiket yang sudah dibeli tidak dapat ditukar atau dikembalikan.</i></p>
         <br>
-        <p>www.tekniktix.com</p>
+        <p>www.teknikcinema.com</p>
     </div>
 </div>
 

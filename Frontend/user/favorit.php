@@ -160,7 +160,7 @@ $username = isset($_SESSION['username']) ? $_SESSION['username'] : 'User';
     <footer>
         <div class="footer-content">
             <div class="footer-section about">
-                <h3>TeknikTix</h3>
+                <h3>TekCinema</h3>
                 <p>Platform pemesanan tiket bioskop terpercaya dengan layanan terbaik untuk pengalaman menonton yang tak terlupakan.</p>
             </div>
             <div class="footer-section links">
@@ -176,7 +176,7 @@ $username = isset($_SESSION['username']) ? $_SESSION['username'] : 'User';
                 <h3>Kontak Kami</h3>
                 <p><i class="fas fa-map-marker-alt"></i> Jl. Kemiri Barat No.47, Salatiga</p>
                 <p><i class="fas fa-phone"></i> +62 812-1234-4321</p>
-                <p><i class="fas fa-envelope"></i> info@tekniktix.com</p>
+                <p><i class="fas fa-envelope"></i> info@teknikcinema.com</p>
             </div>
             <div class="footer-section social">
                 <h3>Ikuti Kami</h3>
@@ -189,7 +189,7 @@ $username = isset($_SESSION['username']) ? $_SESSION['username'] : 'User';
             </div>
         </div>
         <div class="footer-bottom">
-            &copy; 2025 TeknikTix. All Rights Reserved.
+            &copy; 2025 Teknik Cinema. All Rights Reserved.
         </div>
     </footer>
 

@@ -111,11 +111,12 @@ function e($v){ return htmlspecialchars($v, ENT_QUOTES); }
 
 <!-- NAVBAR -->
 <div class="navbar">
-    <div class="brand">TEKNIKTIX - ADMIN</div>
+    <div class="brand">TEKNIK-CINEMA - ADMIN</div>
     <div>
         <a href="dashboard.php">Dashboard</a>
         <a href="admin_film.php">Kelola Film</a>
         <a href="admin_jadwal.php">Kelola Jadwal</a>
+        <a href="admin_users.php"><i class="fa-solid fa-users-gear"></i> Kelola User</a>
         <a href="../../Frontend/logout.php" style="color:#ffcc00;">Logout</a>
     </div>
 </div>

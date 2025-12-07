@@ -28,11 +28,7 @@ if ($action === 'add' && $_SERVER['REQUEST_METHOD'] === 'POST') {
         if (mysqli_num_rows($check) > 0) {
             $msg = "Username sudah digunakan!";
         } else {
-            // HASH PASSWORD (Recommended for security)
-            // If your login system uses password_verify(), use this:
-            // $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-            
-            // If your login system uses plain text (as per your previous request), use this:
+           
             $hashed_password = $password; 
 
             // Insert into database
@@ -122,7 +118,7 @@ $users = mysqli_fetch_all($users_res, MYSQLI_ASSOC);
 <body>
 
 <div class="navbar-custom">
-    <div class="brand">TEKNIKTIX - ADMIN</div>
+    <div class="brand">TEKNIK-CINEMA - ADMIN</div>
     <div>
         <a href="dashboard.php">Dashboard</a>
         <a href="admin_film.php">Kelola Film</a>

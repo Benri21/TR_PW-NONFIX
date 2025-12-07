@@ -23,7 +23,7 @@ $result_terbaru = mysqli_query($conn, $query_terbaru);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TeknikTix - Home</title>
+    <title>Teknik-Cinema - Home</title>
     
     <link rel="stylesheet" href="Style/style.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -61,11 +61,11 @@ $result_terbaru = mysqli_query($conn, $query_terbaru);
             <div class="hero-overlay"></div>
             <div class="hero-content">
                 <h1>Welcome, <?= htmlspecialchars($username) ?>!</h1>
-                <p>Selamat Datang di Web Pemesanan Tiket TeknikTix. Nikmati kemudahan pengecekan jadwal film dan pemesanan tiket bioskop.</p>
+                <p>Selamat Datang di Web Pemesanan Tiket Teknik-Cinema. Nikmati kemudahan pengecekan jadwal film dan pemesanan tiket bioskop.</p>
                 
                 <div class="hero-badge">
                     <div class="circle-logo">
-                        <h3>TeTix</h3>
+                        <h3>TekCinema</h3>
                         <i class="fa-solid fa-clapperboard"></i>
                         <p>BIOSKOP TIKET</p>
                     </div>
@@ -172,7 +172,7 @@ $result_terbaru = mysqli_query($conn, $query_terbaru);
                 <h3>Kontak Kami</h3>
                 <p><i class="fas fa-map-marker-alt"></i> Jl. Kemiri Barat No.47, Salatiga</p>
                 <p><i class="fas fa-phone"></i> +62 812-1234-4321</p>
-                <p><i class="fas fa-envelope"></i> info@tekniktix.com</p>
+                <p><i class="fas fa-envelope"></i> info@teknikcineam.com</p>
             </div>
 
             <div class="footer-section social">
@@ -187,7 +187,7 @@ $result_terbaru = mysqli_query($conn, $query_terbaru);
         </div>
 
         <div class="footer-bottom">
-            &copy; 2025 TeknikTix. All Rights Reserved.
+            &copy; 2025 Teknik Cinema. All Rights Reserved.
         </div>
     </footer>
 

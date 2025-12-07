@@ -22,6 +22,7 @@ JOIN film ON pemesanan.film_id = film.id
     <a href="admin_film.php">Kelola Film</a>
     <a href="admin_jadwal.php">Kelola Jadwal</a>
     <a href="admin_pemesanan.php" class="active">Daftar Pemesanan</a>
+    <a href="admin_users.php"><i class="fa-solid fa-users-gear"></i> Kelola User</a>
     <a href="../Frontend/logout.php" class="logout">Logout</a>
 </div>
 
