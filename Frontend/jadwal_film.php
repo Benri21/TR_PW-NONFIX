@@ -146,7 +146,7 @@ $result = mysqli_query($conn, $query);
                     <div class="rating-badge">
                         <i class="fa-solid fa-star"></i> <?= $rating ?>
                     </div>
-                    <a href="order.php?id=<?= $row['id_film'] ?>">
+                    <a href="user/order.php?id=<?= $row['id_film'] ?>">
                         <img src="<?= $path_gambar ?>" alt="<?= $judul ?>">
                     </a>
                 </div>

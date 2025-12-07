@@ -1,6 +1,5 @@
 <?php
 session_start();
-// Pastikan path koneksi ini benar (Mundur 2 folder dari Frontend/user/)
 require_once __DIR__ . "/../../Backend/koneksi.php";
 
 // 1. KEAMANAN & ID FILM
@@ -10,7 +9,7 @@ if (!isset($_SESSION['username'])) {
 }
 
 if (!isset($_GET['id'])) {
-    header("Location: ../jadwal_film.php");
+    header("Location: ../Jadwal_film.php");
     exit();
 }
 
@@ -21,14 +20,10 @@ $id_user = $_SESSION['id_user'];
 $query_film = "SELECT * FROM film WHERE id_film = '$id_film'";
 $result_film = mysqli_query($conn, $query_film);
 $film = mysqli_fetch_assoc($result_film);
-
-// Harga Tiket
 $harga_per_tiket = isset($film['harga']) ? $film['harga'] : 35000;
 
-// 3. AMBIL DATA JADWAL (Dari Database)
-$query_jadwal = "SELECT * FROM jadwal 
-                 WHERE id_film = '$id_film' AND tanggal >= CURDATE() 
-                 ORDER BY tanggal ASC, jam_mulai ASC";
+// 3. AMBIL DATA JADWAL
+$query_jadwal = "SELECT * FROM jadwal WHERE id_film = '$id_film' AND tanggal >= CURDATE() ORDER BY tanggal ASC, jam_mulai ASC";
 $result_jadwal = mysqli_query($conn, $query_jadwal);
 
 $schedule_data = [];
@@ -40,27 +35,69 @@ if (mysqli_num_rows($result_jadwal) > 0) {
     }
 }
 
-// 4. PROSES TRANSAKSI
+// 4. API UNTUK CEK KURSI (Dipanggil via AJAX)
+if (isset($_GET['action']) && $_GET['action'] == 'check_seats') {
+    $date = $_GET['date'];
+    $time = $_GET['time'];
+    
+    // Ambil kursi yang statusnya BUKAN 'batal'
+    $q_seats = "SELECT kursi FROM transaksi 
+                WHERE id_film = '$id_film' 
+                AND tanggal_tayang = '$date' 
+                AND jam_tayang = '$time' 
+                AND status != 'batal'";
+    
+    $res_seats = mysqli_query($conn, $q_seats);
+    $booked_seats = [];
+    
+    while($row = mysqli_fetch_assoc($res_seats)) {
+        // Pecah string "A1,A2" menjadi array
+        $seats = explode(',', $row['kursi']);
+        foreach($seats as $s) {
+            $booked_seats[] = trim($s);
+        }
+    }
+    
+    echo json_encode($booked_seats);
+    exit(); // Stop eksekusi agar tidak render HTML
+}
+
+// 5. PROSES TRANSAKSI
 if (isset($_POST['submit_order'])) {
     $tanggal = mysqli_real_escape_string($conn, $_POST['tanggal']);
     $jam     = mysqli_real_escape_string($conn, $_POST['jam']);
     $kursi   = mysqli_real_escape_string($conn, $_POST['selected_seats']); 
     $total   = mysqli_real_escape_string($conn, $_POST['total_price']);
     
-    // Hitung Jumlah Tiket
     $seat_array = explode(",", $kursi);
     $jumlah_tiket = count($seat_array);
 
-    if (empty($kursi) || empty($tanggal) || empty($jam)) {
+    // Validasi Ganda (Server Side Check)
+    $cek_booked = "SELECT * FROM transaksi 
+                   WHERE id_film = '$id_film' AND tanggal_tayang = '$tanggal' 
+                   AND jam_tayang = '$jam' AND status != 'batal'";
+    $res_cek = mysqli_query($conn, $cek_booked);
+    $is_taken = false;
+    
+    while($r = mysqli_fetch_assoc($res_cek)) {
+        $taken_seats = explode(',', $r['kursi']);
+        foreach($seat_array as $my_seat) {
+            if(in_array(trim($my_seat), $taken_seats)) {
+                $is_taken = true; break;
+            }
+        }
+    }
+
+    if ($is_taken) {
+        echo "<script>alert('Maaf, salah satu kursi yang Anda pilih baru saja dipesan orang lain!');</script>";
+    } elseif (empty($kursi) || empty($tanggal) || empty($jam)) {
         echo "<script>alert('Mohon lengkapi jadwal dan kursi!');</script>";
     } else {
-        // --- PERUBAHAN DISINI ---
-        // Status di-set 'pending' agar nanti diverifikasi oleh Kasir
         $insert = "INSERT INTO transaksi (id_user, id_film, tanggal_tayang, jam_tayang, jumlah_tiket, kursi, total_harga, status, tanggal_pesan) 
                    VALUES ('$id_user', '$id_film', '$tanggal', '$jam', '$jumlah_tiket', '$kursi', '$total', 'pending', NOW())";
         
         if (mysqli_query($conn, $insert)) {
-            echo "<script>alert('Pesanan Berhasil Dibuat! Silakan lakukan pembayaran dan tunggu verifikasi Kasir.'); window.location.href='pesanan.php';</script>";
+            echo "<script>alert('Pesanan Berhasil! Silakan bayar.'); window.location.href='pesanan.php';</script>";
         } else {
             echo "<script>alert('Gagal memesan: " . mysqli_error($conn) . "');</script>";
         }
@@ -89,7 +126,9 @@ if (isset($_POST['submit_order'])) {
         .seat { height: 35px; background: #334155; border-radius: 5px; cursor: pointer; transition: 0.2s; font-size: 10px; display: flex; align-items: center; justify-content: center; color: #94a3b8; }
         .seat:hover { background: #64748b; color: white; }
         .seat.selected { background: #ffc107; color: black; font-weight: bold; box-shadow: 0 0 10px #ffc107; }
-        .seat.occupied { background: #ef4444; cursor: not-allowed; opacity: 0.5; }
+        /* Style Kursi Terisi */
+        .seat.occupied { background: #ef4444 !important; cursor: not-allowed; color: white; opacity: 0.6; pointer-events: none; }
+        
         .form-select, .form-control { background: #0f172a; color: white; border: 1px solid #475569; }
         .form-select:focus { border-color: #ffc107; box-shadow: none; }
         .total-box { background: #0f172a; padding: 15px; border-radius: 8px; margin-top: 20px; border: 1px solid #ffc107; }
@@ -107,9 +146,7 @@ if (isset($_POST['submit_order'])) {
     <div class="order-container">
         <div class="info-panel">
             <h3 class="text-warning mb-3"><?= $film['judul_film'] ?></h3>
-            <p class="text-white-50 small mb-4">
-                Rating: <?= $film['rating'] ?> | Durasi: <?= $film['durasi'] ?>
-            </p>
+            <p class="text-white-50 small mb-4">Rating: <?= $film['rating'] ?> | Durasi: <?= $film['durasi'] ?></p>
 
             <form method="POST" id="bookingForm">
                 <div class="mb-3">
@@ -122,8 +159,6 @@ if (isset($_POST['submit_order'])) {
                                 $displayDate = date('d M Y', strtotime($tgl));
                                 echo "<option value='$tgl'>$displayDate</option>";
                             }
-                        } else {
-                            echo "<option disabled>Belum ada jadwal</option>";
                         }
                         ?>
                     </select>
@@ -131,7 +166,7 @@ if (isset($_POST['submit_order'])) {
 
                 <div class="mb-3">
                     <label class="form-label text-warning">Pilih Jam</label>
-                    <select name="jam" id="selectJam" class="form-select" required disabled>
+                    <select name="jam" id="selectJam" class="form-select" required disabled onchange="loadBookedSeats()">
                         <option value="">-- Pilih Tanggal Dulu --</option>
                     </select>
                 </div>
@@ -140,19 +175,10 @@ if (isset($_POST['submit_order'])) {
                 <input type="hidden" name="total_price" id="inputTotal">
 
                 <div class="total-box">
-                    <div class="d-flex justify-content-between">
-                        <span>Kursi:</span>
-                        <span id="displaySeats" class="text-warning fw-bold">-</span>
-                    </div>
-                    <div class="d-flex justify-content-between mt-2">
-                        <span>Harga:</span>
-                        <span>Rp <?= number_format($harga_per_tiket, 0, ',', '.') ?></span>
-                    </div>
+                    <div class="d-flex justify-content-between"><span>Kursi:</span><span id="displaySeats" class="text-warning fw-bold">-</span></div>
+                    <div class="d-flex justify-content-between mt-2"><span>Harga:</span><span>Rp <?= number_format($harga_per_tiket, 0, ',', '.') ?></span></div>
                     <hr style="border-color: #555;">
-                    <div class="d-flex justify-content-between fs-5 fw-bold">
-                        <span>Total:</span>
-                        <span class="text-warning" id="displayTotal">Rp 0</span>
-                    </div>
+                    <div class="d-flex justify-content-between fs-5 fw-bold"><span>Total:</span><span class="text-warning" id="displayTotal">Rp 0</span></div>
                 </div>
 
                 <button type="submit" name="submit_order" class="btn btn-confirm">Pesan Tiket</button>
@@ -162,7 +188,6 @@ if (isset($_POST['submit_order'])) {
         <div class="seat-panel">
             <h4 class="mb-4">Pilih Kursi</h4>
             <div class="screen">LAYAR BIOSKOP</div>
-
             <div class="seat-grid">
                 <?php
                 $rows = ['A', 'B', 'C', 'D', 'E'];
@@ -170,15 +195,15 @@ if (isset($_POST['submit_order'])) {
                 foreach ($rows as $row) {
                     for ($c = 1; $c <= $cols; $c++) {
                         $seatNum = $row . $c;
-                        echo "<div class='seat' data-seat='$seatNum'>$seatNum</div>";
+                        echo "<div class='seat' id='seat-$seatNum' data-seat='$seatNum'>$seatNum</div>";
                     }
                 }
                 ?>
             </div>
-
             <div class="mt-4 d-flex justify-content-center gap-4 small text-white-50">
                 <div class="d-flex align-items-center gap-2"><div style="width:15px; height:15px; background:#334155;"></div> Kosong</div>
                 <div class="d-flex align-items-center gap-2"><div style="width:15px; height:15px; background:#ffc107;"></div> Dipilih</div>
+                <div class="d-flex align-items-center gap-2"><div style="width:15px; height:15px; background:#ef4444;"></div> Terisi</div>
             </div>
         </div>
     </div>
@@ -187,10 +212,14 @@ if (isset($_POST['submit_order'])) {
         const schedules = <?= json_encode($schedule_data) ?>;
         const selectTanggal = document.getElementById('selectTanggal');
         const selectJam = document.getElementById('selectJam');
+        const idFilm = "<?= $id_film ?>";
 
         function updateJam() {
             const tgl = selectTanggal.value;
             selectJam.innerHTML = '<option value="">-- Pilih Jam --</option>';
+            // Reset kursi saat ganti tanggal
+            resetSeats();
+            
             if (tgl && schedules[tgl]) {
                 selectJam.disabled = false;
                 schedules[tgl].forEach(jam => {
@@ -204,6 +233,39 @@ if (isset($_POST['submit_order'])) {
             }
         }
 
+        // --- FUNGSI UTAMA: CEK KURSI TERISI ---
+        function loadBookedSeats() {
+            const tgl = selectTanggal.value;
+            const jam = selectJam.value;
+            
+            if(!tgl || !jam) return;
+
+            // Reset dulu sebelum load baru
+            resetSeats();
+
+            // Panggil PHP via Fetch API
+            fetch(`order.php?action=check_seats&id=${idFilm}&date=${tgl}&time=${jam}`)
+                .then(response => response.json())
+                .then(bookedSeats => {
+                    bookedSeats.forEach(seatNum => {
+                        const seatElem = document.getElementById(`seat-${seatNum}`);
+                        if(seatElem) {
+                            seatElem.classList.add('occupied');
+                            seatElem.title = "Sudah Dipesan";
+                        }
+                    });
+                })
+                .catch(err => console.error("Gagal memuat kursi:", err));
+        }
+
+        function resetSeats() {
+            document.querySelectorAll('.seat').forEach(s => {
+                s.classList.remove('occupied', 'selected');
+            });
+            updateTotal(); // Reset harga
+        }
+
+        // Logic Pilih Kursi
         const seatContainer = document.querySelector('.seat-grid');
         const displaySeats = document.getElementById('displaySeats');
         const displayTotal = document.getElementById('displayTotal');
