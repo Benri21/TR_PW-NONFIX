@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 07 Des 2025 pada 19.14
+-- Waktu pembuatan: 08 Des 2025 pada 18.01
 -- Versi server: 10.4.32-MariaDB
 -- Versi PHP: 8.2.12
 
@@ -134,7 +134,8 @@ CREATE TABLE `transaksi` (
 INSERT INTO `transaksi` (`id_transaksi`, `id_user`, `id_film`, `tanggal_pesan`, `tanggal_tayang`, `jam_tayang`, `jumlah_tiket`, `kursi`, `total_harga`, `status`, `id_kasir`) VALUES
 (1, 8, 1, '2025-12-05 18:55:32', '2025-12-06', '13:00', 1, 'B1', 30.00, 'terverifikasi', 11),
 (2, 8, 2, '2025-12-07 15:29:48', '2025-12-07', '16:00', 1, 'A1', 35.00, 'terverifikasi', 11),
-(4, 14, 1, '2025-12-08 01:06:56', '2025-12-09', '14:00', 1, 'D2', 30.00, 'terverifikasi', 11);
+(4, 14, 1, '2025-12-08 01:06:56', '2025-12-09', '14:00', 1, 'D2', 30.00, 'terverifikasi', 11),
+(5, 8, 2, '2025-12-08 13:09:12', '2025-12-08', '19:00', 1, 'D2', 35.00, 'pending', NULL);
 
 -- --------------------------------------------------------
 
@@ -163,7 +164,8 @@ INSERT INTO `users` (`id_user`, `username`, `password`, `role`, `created_at`) VA
 (10, 'admin12', 'admin123', 'admin', '2025-12-07 08:16:32'),
 (11, 'kasir12', '222', 'kasir', '2025-12-07 08:30:37'),
 (13, 'benri', '672024259', 'admin', '2025-12-07 18:04:09'),
-(14, 'BenriUser', '123', 'user', '2025-12-07 18:06:28');
+(14, 'BenriUser', '123', 'user', '2025-12-07 18:06:28'),
+(15, 'kasir', 'kasir123', 'kasir', '2025-12-08 17:01:32');
 
 --
 -- Indexes for dumped tables
@@ -230,13 +232,13 @@ ALTER TABLE `jadwal`
 -- AUTO_INCREMENT untuk tabel `transaksi`
 --
 ALTER TABLE `transaksi`
-  MODIFY `id_transaksi` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_transaksi` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT untuk tabel `users`
 --
 ALTER TABLE `users`
-  MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
