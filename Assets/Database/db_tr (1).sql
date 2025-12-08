@@ -1,7 +1,3 @@
--- phpMyAdmin SQL Dump
--- version 5.2.1
--- https://www.phpmyadmin.net/
---
 -- Host: 127.0.0.1
 -- Waktu pembuatan: 08 Des 2025 pada 18.01
 -- Versi server: 10.4.32-MariaDB
